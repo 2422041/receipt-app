@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './App.css'
-import { Expense } from './types/expense'
+import type { Expense } from './types/expense'
 
 function App() {
   const [expenses, setExpenses] = useState<Expense[]>([])
