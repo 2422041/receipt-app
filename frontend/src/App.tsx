@@ -37,6 +37,8 @@ function App() {
     setExpenses(updatedExpenses)
   }
 
+  const totalAmount = expenses.reduce((sum, item) => sum + item.amount, 0)
+
   return (
     <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
       <h1>💰 レシート支出管理</h1>
@@ -77,6 +79,9 @@ function App() {
             ))}
           </ul>
         )}
+      </div>
+      <div style={{ backgroundColor: '#f0f0f0', padding: '15px', borderRadius: '8px', marginBottom: '20px' }}>
+        <h2 style={{ margin: 0 }}>合計: {totalAmount.toLocaleString()} 円</h2>
       </div>
     </div>
   )
