@@ -9,23 +9,32 @@ function App() {
   const [title, setTitle] = useState('')
   const [amount, setAmount] = useState('')
 
+  // 📝 新しい支出を追加する関数
   const addExpense = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!title || !amount) return
+    e.preventDefault() // ページ更新を防ぐ
+    if (!title || !amount) return // 空の場合は何もしない
 
     const newExpense: Expense = {
-      id: crypto.randomUUID(), // ブラウザ標準機能で一意のIDを生成
+      id: crypto.randomUUID(), // ブラウザが一意のIDを自動生成
       date: new Date().toISOString().split('T')[0], // 今日の日付 (YYYY-MM-DD)
       title,
       amount: Number(amount),
       category: '未分類'
     }
 
+    // 既存の支出リストに新しいものを追加
     setExpenses([...expenses, newExpense])
     
     // 入力欄を空にする
     setTitle('')
     setAmount('')
+  }
+
+  // 🗑️ 支出を削除する関数
+  const deleteExpense = (id: string) => {
+    // IDが一致しない項目だけを残す（つまり、指定したIDは削除される）
+    const updatedExpenses = expenses.filter(item => item.id !== id)
+    setExpenses(updatedExpenses)
   }
 
   return (
@@ -59,7 +68,11 @@ function App() {
             {expenses.map((item) => (
               <li key={item.id} style={{ borderBottom: '1px solid #ccc', padding: '10px 0', display: 'flex', justifyContent: 'space-between' }}>
                 <span>{item.date} : <strong>{item.title}</strong></span>
-                <span>{item.amount.toLocaleString()} 円</span>
+                <div>
+                  <span style={{ marginRight: '10px' }}>{item.amount.toLocaleString()} 円</span>
+                  {/* 💡 Reactのルール3：クリック時に「関数を実行するよ」と予約する */}
+                  <button onClick={() => deleteExpense(item.id)} style={{ color: 'red' }}>削除</button>
+                </div>
               </li>
             ))}
           </ul>
