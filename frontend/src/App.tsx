@@ -76,7 +76,14 @@ function App() {
           <ul style={{ listStyle: 'none', padding: 0 }}>
             {expenses.map((item) => (
               <li key={item.id} style={{ borderBottom: '1px solid #ccc', padding: '10px 0', display: 'flex', justifyContent: 'space-between' }}>
-                <span>{item.date} : <strong>{item.title}</strong></span>
+                <span>
+                  {item.date} 
+                  {/* カテゴリに色付きのラベルをつける */}
+                  <small style={{ marginLeft: '10px', color: '#666', border: '1px solid #ccc', padding: '2px 5px', borderRadius: '4px' }}>
+                    {item.category}
+                  </small>
+                  <strong style={{ marginLeft: '10px' }}>{item.title}</strong>
+                </span>
                 <div>
                   <span style={{ marginRight: '10px' }}>{item.amount.toLocaleString()} 円</span>
                   {/* 💡 Reactのルール3：クリック時に「関数を実行するよ」と予約する */}
