@@ -8,6 +8,7 @@ function App() {
   // フォーム用の入力状態
   const [title, setTitle] = useState('')
   const [amount, setAmount] = useState('')
+  const [category, setCategory] = useState('食費')
 
   // 📝 新しい支出を追加する関数
   const addExpense = (e: React.FormEvent) => {
@@ -19,7 +20,7 @@ function App() {
       date: new Date().toISOString().split('T')[0], // 今日の日付 (YYYY-MM-DD)
       title,
       amount: Number(amount),
-      category: '未分類'
+      category: category
     }
 
     // 既存の支出リストに新しいものを追加
@@ -57,6 +58,12 @@ function App() {
           value={amount} 
           onChange={(e) => setAmount(e.target.value)} 
         />
+        <select value={category} onChange={(e) => setCategory(e.target.value)}>
+          <option value="食費">食費</option>
+          <option value="日用品">日用品</option>
+          <option value="交際費">交際費</option>
+          <option value="その他">その他</option>
+        </select>
         <button type="submit">追加</button>
       </form>
 
