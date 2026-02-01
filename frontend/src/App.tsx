@@ -47,6 +47,12 @@ function App() {
 
   const totalAmount = expenses.reduce((sum, item) => sum + item.amount, 0)
 
+  // 📊 カテゴリごとの合計を計算
+  const categoryTotals = expenses.reduce((acc, item) => {
+    acc[item.category] = (acc[item.category] || 0) + item.amount
+    return acc
+  }, {} as Record<string, number>)
+
   return (
     <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
       <h1>💰 レシート支出管理</h1>
@@ -110,6 +116,19 @@ function App() {
       </div>
       <div style={{ backgroundColor: '#f0f0f0', padding: '15px', borderRadius: '8px', marginBottom: '20px' }}>
         <h2 style={{ margin: 0 }}>合計: {totalAmount.toLocaleString()} 円</h2>
+        
+        {/* 📊 カテゴリごとの集計 */}
+        {expenses.length > 0 && (
+          <div style={{ marginTop: '15px', fontSize: '14px' }}>
+            <p style={{ margin: '5px 0', color: '#555' }}>カテゴリ別:</p>
+            {Object.entries(categoryTotals).map(([cat, total]) => (
+              <div key={cat} style={{ marginLeft: '10px', padding: '3px 0' }}>
+                <span>{cat}: </span>
+                <strong>{(total as number).toLocaleString()} 円</strong>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )
