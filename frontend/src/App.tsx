@@ -38,6 +38,13 @@ function App() {
     setExpenses(updatedExpenses)
   }
 
+  // 🧹 すべての支出を削除する関数
+  const clearAllExpenses = () => {
+    if (window.confirm('本当にすべての支出を削除しますか？')) {
+      setExpenses([])
+    }
+  }
+
   const totalAmount = expenses.reduce((sum, item) => sum + item.amount, 0)
 
   return (
@@ -69,7 +76,14 @@ function App() {
 
       {/* 表示リスト */}
       <div className="list-section">
-        <h2>履歴</h2>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+          <h2>履歴</h2>
+          {expenses.length > 0 && (
+            <button onClick={clearAllExpenses} style={{ backgroundColor: '#ff6b6b', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer' }}>
+              すべて削除
+            </button>
+          )}
+        </div>
         {expenses.length === 0 ? (
           <p>データがありません</p>
         ) : (
