@@ -1,14 +1,23 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 import type { Expense } from './types/expense'
 
 function App() {
-  const [expenses, setExpenses] = useState<Expense[]>([])
+  const [expenses, setExpenses] = useState<Expense[]>(() => {
+    // 初回マウント時に LocalStorage から読み込む
+    const saved = localStorage.getItem('expenses')
+    return saved ? JSON.parse(saved) : []
+  })
   
   // フォーム用の入力状態
   const [title, setTitle] = useState('')
   const [amount, setAmount] = useState('')
   const [category, setCategory] = useState('食費')
+
+  // 📦 expenses が変わる度に LocalStorage に保存
+  useEffect(() => {
+    localStorage.setItem('expenses', JSON.stringify(expenses))
+  }, [expenses])
 
   // 📝 新しい支出を追加する関数
   const addExpense = (e: React.FormEvent) => {
