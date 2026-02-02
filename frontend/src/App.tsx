@@ -103,7 +103,8 @@ function App() {
           <p>データがありません</p>
         ) : (
           <ul style={{ listStyle: 'none', padding: 0 }}>
-            {expenses.map((item) => (
+            {/* 📅 最新の支出を上に表示（逆順ソート） */}
+            {expenses.slice().reverse().map((item) => (
               <li key={item.id} style={{ borderBottom: '1px solid #ccc', padding: '10px 0', display: 'flex', justifyContent: 'space-between' }}>
                 <span>
                   {item.date} 
@@ -125,6 +126,7 @@ function App() {
       </div>
       <div style={{ backgroundColor: '#f0f0f0', padding: '15px', borderRadius: '8px', marginBottom: '20px' }}>
         <h2 style={{ margin: 0 }}>合計: {totalAmount.toLocaleString()} 円</h2>
+        <p style={{ margin: '5px 0', fontSize: '13px', color: '#666' }}>📊 件数: {expenses.length}件</p>
         
         {/* 📊 カテゴリごとの集計 */}
         {expenses.length > 0 && (
