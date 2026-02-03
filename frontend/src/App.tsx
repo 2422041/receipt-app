@@ -57,6 +57,7 @@ function App() {
   const totalAmount = expenses.reduce((sum, item) => sum + item.amount, 0)
   const averageAmount = expenses.length > 0 ? Math.round(totalAmount / expenses.length) : 0
   const maxAmount = expenses.length > 0 ? Math.max(...expenses.map(item => item.amount)) : 0
+  const minAmount = expenses.length > 0 ? Math.min(...expenses.map(item => item.amount)) : 0
 
   // 📊 カテゴリごとの合計を計算
   const categoryTotals = expenses.reduce((acc, item) => {
@@ -128,7 +129,8 @@ function App() {
       </div>
       <div style={{ backgroundColor: '#f0f0f0', padding: '15px', borderRadius: '8px', marginBottom: '20px' }}>
         <h2 style={{ margin: 0 }}>合計: {totalAmount.toLocaleString()} 円</h2>
-        <p style={{ margin: '5px 0', fontSize: '13px', color: '#666' }}>📊 件数: {expenses.length}件 / 平均: {averageAmount.toLocaleString()} 円 / 最高: {maxAmount.toLocaleString()} 円</p>
+        <p style={{ margin: '5px 0', fontSize: '13px', color: '#666' }}>📊 件数: {expenses.length}件 / 平均: {averageAmount.toLocaleString()} 円</p>
+        <p style={{ margin: '5px 0', fontSize: '13px', color: '#666' }}>📈 最高: {maxAmount.toLocaleString()} 円 / 最低: {minAmount.toLocaleString()} 円</p>
         
         {/* 📊 カテゴリごとの集計 */}
         {expenses.length > 0 && (
