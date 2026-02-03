@@ -58,6 +58,11 @@ function App() {
   const averageAmount = expenses.length > 0 ? Math.round(totalAmount / expenses.length) : 0
   const maxAmount = expenses.length > 0 ? Math.max(...expenses.map(item => item.amount)) : 0
   const minAmount = expenses.length > 0 ? Math.min(...expenses.map(item => item.amount)) : 0
+  
+  // 📅 本日の支出を計算
+  const today = new Date().toISOString().split('T')[0]
+  const todayExpenses = expenses.filter(item => item.date === today)
+  const todayTotal = todayExpenses.reduce((sum, item) => sum + item.amount, 0)
 
   // 📊 カテゴリごとの合計を計算
   const categoryTotals = expenses.reduce((acc, item) => {
@@ -68,6 +73,11 @@ function App() {
   return (
     <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
       <h1>💰 レシート支出管理</h1>
+      
+      {/* 📅 本日の支出表示 */}
+      <div style={{ backgroundColor: '#fff3cd', padding: '10px 15px', borderRadius: '8px', marginBottom: '15px', borderLeft: '4px solid #ffc107' }}>
+        <p style={{ margin: 0, fontSize: '14px', fontWeight: 'bold' }}>📍 本日: {todayTotal.toLocaleString()} 円 ({todayExpenses.length}件)</p>
+      </div>
       
       {/* 入力フォーム */}
       <form onSubmit={addExpense} style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
