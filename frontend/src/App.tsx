@@ -64,6 +64,15 @@ function App() {
   const todayExpenses = expenses.filter(item => item.date === today)
   const todayTotal = todayExpenses.reduce((sum, item) => sum + item.amount, 0)
 
+  // 🏆 最多カテゴリ（最も件数が多いカテゴリ）を取得
+  const categoryCount = expenses.reduce((acc, item) => {
+    acc[item.category] = (acc[item.category] || 0) + 1
+    return acc
+  }, {} as Record<string, number>)
+  const topCategory = expenses.length > 0 
+    ? Object.entries(categoryCount).sort(([, a], [, b]) => b - a)[0]?.[0] 
+    : null
+
   // 📊 カテゴリごとの合計を計算
   const categoryTotals = expenses.reduce((acc, item) => {
     acc[item.category] = (acc[item.category] || 0) + item.amount
@@ -146,6 +155,13 @@ function App() {
         {expenses.length > 0 && (
           <div style={{ marginTop: '15px', fontSize: '14px' }}>
             <p style={{ margin: '5px 0', color: '#555' }}>カテゴリ別:</p>
+            {topCategory && (
+              <div style={{ marginLeft: '10px', padding: '3px 0', marginBottom: '8px' }}>
+                <span>🏆 最多: </span>
+                <strong>{topCategory}</strong>
+                <span style={{ color: '#999', marginLeft: '5px' }}>({categoryCount[topCategory]}件)</span>
+              </div>
+            )}
             {Object.entries(categoryTotals).map(([cat, total]) => (
               <div key={cat} style={{ marginLeft: '10px', padding: '3px 0' }}>
                 <span>{cat}: </span>
