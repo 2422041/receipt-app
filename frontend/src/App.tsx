@@ -13,6 +13,7 @@ function App() {
   const [title, setTitle] = useState('')
   const [amount, setAmount] = useState('')
   const [category, setCategory] = useState('食費')
+  const [sortOrder, setSortOrder] = useState<'latest' | 'highest' | 'lowest'>('latest') // ソート順序
 
   // 📦 expenses が変わる度に LocalStorage に保存
   useEffect(() => {
@@ -115,18 +116,47 @@ function App() {
       <div className="list-section">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
           <h2>履歴</h2>
-          {expenses.length > 0 && (
-            <button onClick={clearAllExpenses} style={{ backgroundColor: '#ff6b6b', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer' }}>
-              すべて削除
-            </button>
-          )}
+          <div style={{ display: 'flex', gap: '5px' }}>
+            {/* 🔀 ソートボタン */}
+            {expenses.length > 0 && (
+              <>
+                <button 
+                  onClick={() => setSortOrder('latest')} 
+                  style={{ padding: '5px 8px', fontSize: '12px', backgroundColor: sortOrder === 'latest' ? '#4CAF50' : '#ddd', color: sortOrder === 'latest' ? 'white' : 'black', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                >
+                  最新順
+                </button>
+                <button 
+                  onClick={() => setSortOrder('highest')} 
+                  style={{ padding: '5px 8px', fontSize: '12px', backgroundColor: sortOrder === 'highest' ? '#4CAF50' : '#ddd', color: sortOrder === 'highest' ? 'white' : 'black', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                >
+                  高い順
+                </button>
+                <button 
+                  onClick={() => setSortOrder('lowest')} 
+                  style={{ padding: '5px 8px', fontSize: '12px', backgroundColor: sortOrder === 'lowest' ? '#4CAF50' : '#ddd', color: sortOrder === 'lowest' ? 'white' : 'black', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                >
+                  安い順
+                </button>
+              </>
+            )}
+            {expenses.length > 0 && (
+              <button onClick={clearAllExpenses} style={{ backgroundColor: '#ff6b6b', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer' }}>
+                すべて削除
+              </button>
+            )}
+          </div>
         </div>
         {expenses.length === 0 ? (
           <p>データがありません</p>
         ) : (
           <ul style={{ listStyle: 'none', padding: 0 }}>
             {/* 📅 最新の支出を上に表示（逆順ソート） */}
-            {expenses.slice().reverse().map((item) => (
+            {expenses.slice().sort((a, b) => {
+              if (sortOrder === 'highest') return b.amount - a.amount
+              if (sortOrder === 'lowest') return a.amount - b.amount
+              return 0 // 'latest' の場合は元の逆順を使用
+            }).reverse().map((item) => (
               <li key={item.id} style={{ borderBottom: '1px solid #ccc', padding: '10px 0', display: 'flex', justifyContent: 'space-between' }}>
                 <span>
                   {item.date} 
