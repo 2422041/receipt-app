@@ -75,6 +75,11 @@ function App() {
     ? Object.entries(categoryCount).sort(([, a], [, b]) => b - a)[0]?.[0] 
     : null
 
+  // 📊 フィルタ済みの統計を計算
+  const filteredExpenses = expenses.filter(item => !filterCategory || item.category === filterCategory)
+  const filteredTotal = filteredExpenses.reduce((sum, item) => sum + item.amount, 0)
+  const filteredAverage = filteredExpenses.length > 0 ? Math.round(filteredTotal / filteredExpenses.length) : 0
+
   // 📊 カテゴリごとの合計を計算
   const categoryTotals = expenses.reduce((acc, item) => {
     acc[item.category] = (acc[item.category] || 0) + item.amount
@@ -118,7 +123,13 @@ function App() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
           <h2>履歴</h2>
           <div style={{ display: 'flex', gap: '5px', alignItems: 'center', flexWrap: 'wrap' }}>
-            {/* 🔍 カテゴリフィルタ */}
+            {/* � フィルタ後の統計表示 */}
+            {filterCategory && filteredExpenses.length > 0 && (
+              <div style={{ fontSize: '12px', color: '#555', padding: '5px 10px', backgroundColor: '#e3f2fd', borderRadius: '4px' }}>
+                <strong>{filterCategory}</strong>: {filteredTotal.toLocaleString()} 円 ({filteredExpenses.length}件)
+              </div>
+            )}
+            {/* �🔍 カテゴリフィルタ */}
             {expenses.length > 0 && (
               <select 
                 value={filterCategory || ''} 
