@@ -138,7 +138,7 @@ function App() {
             {/* � フィルタ後の統計表示 */}
             {filterCategory && filteredExpenses.length > 0 && (
               <div style={{ fontSize: '12px', color: '#555', padding: '5px 10px', backgroundColor: '#e3f2fd', borderRadius: '4px' }}>
-                <strong>{filterCategory}</strong>: {filteredTotal.toLocaleString()} 円 ({filteredExpenses.length}件)
+                <strong>{filterCategory}</strong>: {filteredTotal.toLocaleString()} 円 ({filteredExpenses.length}件) / 平均: {filteredAverage.toLocaleString()} 円
               </div>
             )}
             {/* �🔍 カテゴリフィルタ */}
