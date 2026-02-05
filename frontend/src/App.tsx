@@ -14,6 +14,7 @@ function App() {
   const [amount, setAmount] = useState('')
   const [category, setCategory] = useState('食費')
   const [sortOrder, setSortOrder] = useState<'latest' | 'highest' | 'lowest'>('latest') // ソート順序
+  const [filterCategory, setFilterCategory] = useState<string | null>(null) // カテゴリフィルタ
 
   // 📦 expenses が変わる度に LocalStorage に保存
   useEffect(() => {
@@ -116,7 +117,21 @@ function App() {
       <div className="list-section">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
           <h2>履歴</h2>
-          <div style={{ display: 'flex', gap: '5px' }}>
+          <div style={{ display: 'flex', gap: '5px', alignItems: 'center', flexWrap: 'wrap' }}>
+            {/* 🔍 カテゴリフィルタ */}
+            {expenses.length > 0 && (
+              <select 
+                value={filterCategory || ''} 
+                onChange={(e) => setFilterCategory(e.target.value || null)}
+                style={{ padding: '5px 8px', fontSize: '12px', borderRadius: '4px', border: '1px solid #ddd' }}
+              >
+                <option value="">すべて表示</option>
+                <option value="食費">食費</option>
+                <option value="日用品">日用品</option>
+                <option value="交際費">交際費</option>
+                <option value="その他">その他</option>
+              </select>
+            )}
             {/* 🔀 ソートボタン */}
             {expenses.length > 0 && (
               <>
@@ -151,12 +166,17 @@ function App() {
           <p>データがありません</p>
         ) : (
           <ul style={{ listStyle: 'none', padding: 0 }}>
-            {/* 📅 最新の支出を上に表示（逆順ソート） */}
-            {expenses.slice().sort((a, b) => {
-              if (sortOrder === 'highest') return b.amount - a.amount
-              if (sortOrder === 'lowest') return a.amount - b.amount
-              return 0 // 'latest' の場合は元の逆順を使用
-            }).reverse().map((item) => (
+            {/* � フィルタリング + ソート */}
+            {expenses
+              .filter(item => !filterCategory || item.category === filterCategory)
+              .slice()
+              .sort((a, b) => {
+                if (sortOrder === 'highest') return b.amount - a.amount
+                if (sortOrder === 'lowest') return a.amount - b.amount
+                return 0
+              })
+              .reverse()
+              .map((item) => (
               <li key={item.id} style={{ borderBottom: '1px solid #ccc', padding: '10px 0', display: 'flex', justifyContent: 'space-between' }}>
                 <span>
                   {item.date} 
