@@ -15,6 +15,7 @@ function App() {
   const [category, setCategory] = useState('食費')
   const [sortOrder, setSortOrder] = useState<'latest' | 'highest' | 'lowest'>('latest') // ソート順序
   const [filterCategory, setFilterCategory] = useState<string | null>(null) // カテゴリフィルタ
+  const [searchKeyword, setSearchKeyword] = useState('') // 検索キーワード
 
   // 📦 expenses が変わる度に LocalStorage に保存
   useEffect(() => {
@@ -96,7 +97,7 @@ function App() {
       </div>
       
       {/* 入力フォーム */}
-      <form onSubmit={addExpense} style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
+      <form onSubmit={addExpense} style={{ marginBottom: '15px', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
         <input 
           type="text" 
           placeholder="何買った？" 
@@ -117,6 +118,17 @@ function App() {
         </select>
         <button type="submit">追加</button>
       </form>
+
+      {/* 🔍 検索ボックス */}
+      {expenses.length > 0 && (
+        <input 
+          type="text" 
+          placeholder="🔍 支出名で検索..." 
+          value={searchKeyword} 
+          onChange={(e) => setSearchKeyword(e.target.value)}
+          style={{ width: '100%', padding: '8px', marginBottom: '15px', borderRadius: '4px', border: '1px solid #ddd' }}
+        />
+      )}
 
       {/* 表示リスト */}
       <div className="list-section">
@@ -177,9 +189,10 @@ function App() {
           <p>データがありません</p>
         ) : (
           <ul style={{ listStyle: 'none', padding: 0 }}>
-            {/* � フィルタリング + ソート */}
+            {/* 🔍 フィルタリング + 検索 + ソート */}
             {expenses
               .filter(item => !filterCategory || item.category === filterCategory)
+              .filter(item => item.title.toLowerCase().includes(searchKeyword.toLowerCase()))
               .slice()
               .sort((a, b) => {
                 if (sortOrder === 'highest') return b.amount - a.amount
