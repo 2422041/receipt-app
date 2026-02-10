@@ -57,6 +57,13 @@ function App() {
     setSortOrder('latest')
   }
 
+  // 🧹 すべての支出を削除する関数
+  const clearAllExpenses = () => {
+    if (window.confirm('本当にすべての支出を削除しますか？')) {
+      setExpenses([])
+    }
+  }
+
   const totalAmount = expenses.reduce((sum, item) => sum + item.amount, 0)
   const averageAmount = expenses.length > 0 ? Math.round(totalAmount / expenses.length) : 0
   const maxAmount = expenses.length > 0 ? Math.max(...expenses.map(item => item.amount)) : 0
