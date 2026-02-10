@@ -50,11 +50,11 @@ function App() {
     setExpenses(updatedExpenses)
   }
 
-  // 🧹 すべての支出を削除する関数
-  const clearAllExpenses = () => {
-    if (window.confirm('本当にすべての支出を削除しますか？')) {
-      setExpenses([])
-    }
+  // 🧹 フィルタをすべてリセット
+  const resetFilters = () => {
+    setFilterCategory(null)
+    setSearchKeyword('')
+    setSortOrder('latest')
   }
 
   const totalAmount = expenses.reduce((sum, item) => sum + item.amount, 0)
@@ -176,6 +176,15 @@ function App() {
                 >
                   安い順
                 </button>
+                {/* 🔄 フィルタリセットボタン */}
+                {(filterCategory || searchKeyword || sortOrder !== 'latest') && (
+                  <button 
+                    onClick={resetFilters}
+                    style={{ padding: '5px 8px', fontSize: '12px', backgroundColor: '#ff9800', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                  >
+                    フィルタリセット
+                  </button>
+                )}
               </>
             )}
             {expenses.length > 0 && (
