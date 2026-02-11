@@ -75,6 +75,13 @@ function App() {
     setEditAmount('')
   }
 
+  // 📅 本日の支出をすべて削除する関数
+  const clearTodayExpenses = () => {
+    if (window.confirm('本日の支出をすべて削除しますか？')) {
+      setExpenses(expenses.filter(item => item.date !== today))
+    }
+  }
+
   const totalAmount = expenses.reduce((sum, item) => sum + item.amount, 0)
   const averageAmount = expenses.length > 0 ? Math.round(totalAmount / expenses.length) : 0
   const maxAmount = expenses.length > 0 ? Math.max(...expenses.map(item => item.amount)) : 0
@@ -110,8 +117,13 @@ function App() {
       <h1>💰 レシート支出管理</h1>
       
       {/* 📅 本日の支出表示 */}
-      <div style={{ backgroundColor: '#fff3cd', padding: '10px 15px', borderRadius: '8px', marginBottom: '15px', borderLeft: '4px solid #ffc107' }}>
+      <div style={{ backgroundColor: '#fff3cd', padding: '10px 15px', borderRadius: '8px', marginBottom: '15px', borderLeft: '4px solid #ffc107', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <p style={{ margin: 0, fontSize: '14px', fontWeight: 'bold' }}>📍 本日: {todayTotal.toLocaleString()} 円 ({todayExpenses.length}件)</p>
+        {todayExpenses.length > 0 && (
+          <button onClick={clearTodayExpenses} style={{ fontSize: '12px', backgroundColor: '#ff9800', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer' }}>
+            本日をクリア
+          </button>
+        )}
       </div>
       
       {/* 入力フォーム */}
