@@ -16,6 +16,8 @@ function App() {
   const [sortOrder, setSortOrder] = useState<'latest' | 'highest' | 'lowest'>('latest') // ソート順序
   const [filterCategory, setFilterCategory] = useState<string | null>(null) // カテゴリフィルタ
   const [searchKeyword, setSearchKeyword] = useState('') // 検索キーワード
+  const [editingId, setEditingId] = useState<string | null>(null) // 編集中の支出ID
+  const [editAmount, setEditAmount] = useState('') // 編集用の金額
 
   // 📦 expenses が変わる度に LocalStorage に保存
   useEffect(() => {
@@ -62,6 +64,15 @@ function App() {
     if (window.confirm('本当にすべての支出を削除しますか？')) {
       setExpenses([])
     }
+  }
+
+  // ✏️ 支出の金額を編集する関数
+  const updateExpenseAmount = (id: string, newAmount: number) => {
+    setExpenses(expenses.map(item => 
+      item.id === id ? { ...item, amount: newAmount } : item
+    ))
+    setEditingId(null)
+    setEditAmount('')
   }
 
   const totalAmount = expenses.reduce((sum, item) => sum + item.amount, 0)
@@ -227,9 +238,29 @@ function App() {
                   <strong style={{ marginLeft: '10px' }}>{item.title}</strong>
                 </span>
                 <div>
-                  <span style={{ marginRight: '10px' }}>{item.amount.toLocaleString()} 円</span>
-                  {/* 💡 Reactのルール3：クリック時に「関数を実行するよ」と予約する */}
-                  <button onClick={() => deleteExpense(item.id)} style={{ color: 'red' }}>削除</button>
+                  <span style={{ marginRight: '10px' }}>
+                    {editingId === item.id ? (
+                      <input 
+                        type="number" 
+                        value={editAmount} 
+                        onChange={(e) => setEditAmount(e.target.value)}
+                        style={{ width: '80px', padding: '5px', marginRight: '5px' }}
+                      />
+                    ) : (
+                      <span>{item.amount.toLocaleString()} 円</span>
+                    )}
+                  </span>
+                  {editingId === item.id ? (
+                    <>
+                      <button onClick={() => updateExpenseAmount(item.id, Number(editAmount))} style={{ color: 'green', marginRight: '5px' }}>保存</button>
+                      <button onClick={() => setEditingId(null)} style={{ color: 'gray' }}>キャンセル</button>
+                    </>
+                  ) : (
+                    <>
+                      <button onClick={() => { setEditingId(item.id); setEditAmount(item.amount.toString()); }} style={{ color: 'blue', marginRight: '5px' }}>編集</button>
+                      <button onClick={() => deleteExpense(item.id)} style={{ color: 'red' }}>削除</button>
+                    </>
+                  )}
                 </div>
               </li>
             ))}
