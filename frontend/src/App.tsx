@@ -18,10 +18,12 @@ function App() {
   const [searchKeyword, setSearchKeyword] = useState('') // 検索キーワード
   const [editingId, setEditingId] = useState<string | null>(null) // 編集中の支出ID
   const [editAmount, setEditAmount] = useState('') // 編集用の金額
+  const [lastUpdated, setLastUpdated] = useState<string>(new Date().toLocaleTimeString('ja-JP'))
 
   // 📦 expenses が変わる度に LocalStorage に保存
   useEffect(() => {
     localStorage.setItem('expenses', JSON.stringify(expenses))
+    setLastUpdated(new Date().toLocaleTimeString('ja-JP'))
   }, [expenses])
 
   // 📝 新しい支出を追加する関数
@@ -115,6 +117,7 @@ function App() {
   return (
     <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
       <h1>💰 レシート支出管理</h1>
+      <p style={{ margin: '5px 0', fontSize: '12px', color: '#999' }}>⏰ 最新更新: {lastUpdated}</p>
       
       {/* 📅 本日の支出表示 */}
       <div style={{ backgroundColor: '#fff3cd', padding: '10px 15px', borderRadius: '8px', marginBottom: '15px', borderLeft: '4px solid #ffc107', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
