@@ -107,6 +107,9 @@ function App() {
   const filteredExpenses = expenses.filter(item => !filterCategory || item.category === filterCategory)
   const filteredTotal = filteredExpenses.reduce((sum, item) => sum + item.amount, 0)
   const filteredAverage = filteredExpenses.length > 0 ? Math.round(filteredTotal / filteredExpenses.length) : 0
+  
+  // 🔍 検索後の支出を計算
+  const searchedExpenses = filteredExpenses.filter(item => item.title.toLowerCase().includes(searchKeyword.toLowerCase()))
 
   // 📊 カテゴリごとの合計を計算
   const categoryTotals = expenses.reduce((acc, item) => {
@@ -166,7 +169,14 @@ function App() {
       {/* 表示リスト */}
       <div className="list-section">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-          <h2>履歴</h2>
+          <div>
+            <h2 style={{ display: 'inline' }}>履歴</h2>
+            {searchedExpenses.length > 0 && (searchKeyword || filterCategory) && (
+              <span style={{ marginLeft: '10px', fontSize: '12px', color: '#666', backgroundColor: '#f0f0f0', padding: '3px 8px', borderRadius: '4px' }}>
+                {searchedExpenses.length}/{expenses.length} 件
+              </span>
+            )}
+          </div>
           <div style={{ display: 'flex', gap: '5px', alignItems: 'center', flexWrap: 'wrap' }}>
             {/* � フィルタ後の統計表示 */}
             {filterCategory && filteredExpenses.length > 0 && (
