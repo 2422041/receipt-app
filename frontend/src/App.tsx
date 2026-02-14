@@ -101,6 +101,11 @@ function App() {
   const todayExpenses = expenses.filter(item => item.date === today)
   const todayTotal = todayExpenses.reduce((sum, item) => sum + item.amount, 0)
 
+  // 📅 昨日の支出を計算
+  const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0]
+  const yesterdayExpenses = expenses.filter(item => item.date === yesterday)
+  const yesterdayTotal = yesterdayExpenses.reduce((sum, item) => sum + item.amount, 0)
+
   // 🏆 最多カテゴリ（最も件数が多いカテゴリ）を取得
   const categoryCount = expenses.reduce((acc, item) => {
     acc[item.category] = (acc[item.category] || 0) + 1
@@ -129,14 +134,19 @@ function App() {
       <h1>💰 レシート支出管理</h1>
       <p style={{ margin: '5px 0', fontSize: '12px', color: '#999' }}>⏰ 最新更新: {lastUpdated}</p>
       
-      {/* 📅 本日の支出表示 */}
-      <div style={{ backgroundColor: '#fff3cd', padding: '10px 15px', borderRadius: '8px', marginBottom: '15px', borderLeft: '4px solid #ffc107', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <p style={{ margin: 0, fontSize: '14px', fontWeight: 'bold' }}>📍 本日: {todayTotal.toLocaleString()} 円 ({todayExpenses.length}件)</p>
-        {todayExpenses.length > 0 && (
-          <button onClick={clearTodayExpenses} style={{ fontSize: '12px', backgroundColor: '#ff9800', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer' }}>
-            本日をクリア
-          </button>
-        )}
+      {/* 📅 本日と昨日の支出表示 */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '15px' }}>
+        <div style={{ backgroundColor: '#fff3cd', padding: '10px 15px', borderRadius: '8px', borderLeft: '4px solid #ffc107', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <p style={{ margin: 0, fontSize: '14px', fontWeight: 'bold' }}>📍 本日: {todayTotal.toLocaleString()} 円</p>
+          {todayExpenses.length > 0 && (
+            <button onClick={clearTodayExpenses} style={{ fontSize: '11px', backgroundColor: '#ff9800', color: 'white', border: 'none', padding: '3px 8px', borderRadius: '4px', cursor: 'pointer' }}>
+              クリア
+            </button>
+          )}
+        </div>
+        <div style={{ backgroundColor: '#e8f5e9', padding: '10px 15px', borderRadius: '8px', borderLeft: '4px solid #4caf50' }}>
+          <p style={{ margin: 0, fontSize: '14px', fontWeight: 'bold' }}>📅 昨日: {yesterdayTotal.toLocaleString()} 円</p>
+        </div>
       </div>
       
       {/* 入力フォーム */}
