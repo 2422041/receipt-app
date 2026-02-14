@@ -77,6 +77,13 @@ function App() {
     setEditAmount('')
   }
 
+  // 🧹 入力フォームをリセット
+  const resetForm = () => {
+    setTitle('')
+    setAmount('')
+    setCategory('食費')
+  }
+
   // 📅 本日の支出をすべて削除する関数
   const clearTodayExpenses = () => {
     if (window.confirm('本日の支出をすべて削除しますか？')) {
@@ -153,6 +160,8 @@ function App() {
           <option value="その他">その他</option>
         </select>
         <button type="submit">追加</button>
+        {/* 🧹 フォームリセットボタン */}
+        <button type="button" onClick={resetForm} style={{ backgroundColor: '#9e9e9e', color: 'white' }}>リセット</button>
       </form>
 
       {/* 🔍 検索ボックス */}
