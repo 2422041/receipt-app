@@ -111,6 +111,11 @@ function App() {
   const weekExpenses = expenses.filter(item => item.date >= weekStart)
   const weekTotal = weekExpenses.reduce((sum, item) => sum + item.amount, 0)
 
+  // 📅 今月の支出を計算
+  const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0]
+  const monthExpenses = expenses.filter(item => item.date >= monthStart)
+  const monthTotal = monthExpenses.reduce((sum, item) => sum + item.amount, 0)
+
   // 🏆 最多カテゴリ（最も件数が多いカテゴリ）を取得
   const categoryCount = expenses.reduce((acc, item) => {
     acc[item.category] = (acc[item.category] || 0) + 1
@@ -157,6 +162,11 @@ function App() {
       {/* 📊 今週の支出表示 */}
       <div style={{ backgroundColor: '#e3f2fd', padding: '10px 15px', borderRadius: '8px', marginBottom: '15px', borderLeft: '4px solid #2196f3' }}>
         <p style={{ margin: 0, fontSize: '14px', fontWeight: 'bold' }}>📈 今週: {weekTotal.toLocaleString()} 円 ({weekExpenses.length}件)</p>
+      </div>
+
+      {/* 📅 今月の支出表示 */}
+      <div style={{ backgroundColor: '#f3e5f5', padding: '10px 15px', borderRadius: '8px', marginBottom: '15px', borderLeft: '4px solid #9c27b0' }}>
+        <p style={{ margin: 0, fontSize: '14px', fontWeight: 'bold' }}>📊 今月: {monthTotal.toLocaleString()} 円 ({monthExpenses.length}件)</p>
       </div>
       
       {/* 入力フォーム */}
