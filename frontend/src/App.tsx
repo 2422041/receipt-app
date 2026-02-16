@@ -120,6 +120,10 @@ function App() {
   const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate()
   const daysPassed = new Date().getDate()
   const monthAveragePerDay = Math.round(monthTotal / daysPassed)
+  
+  // 📈 月末までの予想支出を計算
+  const daysRemaining = daysInMonth - daysPassed
+  const projectedMonthTotal = monthTotal + (monthAveragePerDay * daysRemaining)
 
   // 🏆 最多カテゴリ（最も件数が多いカテゴリ）を取得
   const categoryCount = expenses.reduce((acc, item) => {
@@ -173,6 +177,9 @@ function App() {
       <div style={{ backgroundColor: '#f3e5f5', padding: '10px 15px', borderRadius: '8px', marginBottom: '15px', borderLeft: '4px solid #9c27b0' }}>
         <p style={{ margin: 0, fontSize: '14px', fontWeight: 'bold' }}>📊 今月: {monthTotal.toLocaleString()} 円 ({monthExpenses.length}件)</p>
         <p style={{ margin: '5px 0', fontSize: '12px', color: '#666' }}>1日平均: {monthAveragePerDay.toLocaleString()} 円</p>
+        {daysRemaining > 0 && (
+          <p style={{ margin: '5px 0', fontSize: '12px', color: '#9c27b0', fontWeight: 'bold' }}>📈 月末予想: {Math.round(projectedMonthTotal).toLocaleString()} 円</p>
+        )}
       </div>
       
       {/* 入力フォーム */}
