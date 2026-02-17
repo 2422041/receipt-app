@@ -110,6 +110,7 @@ function App() {
   const weekStart = new Date(Date.now() - 604800000).toISOString().split('T')[0]
   const weekExpenses = expenses.filter(item => item.date >= weekStart)
   const weekTotal = weekExpenses.reduce((sum, item) => sum + item.amount, 0)
+  const weekAveragePerDay = weekExpenses.length > 0 ? Math.round(weekTotal / 7) : 0
 
   // 📅 今月の支出を計算
   const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0]
@@ -171,6 +172,7 @@ function App() {
       {/* 📊 今週の支出表示 */}
       <div style={{ backgroundColor: '#e3f2fd', padding: '10px 15px', borderRadius: '8px', marginBottom: '15px', borderLeft: '4px solid #2196f3' }}>
         <p style={{ margin: 0, fontSize: '14px', fontWeight: 'bold' }}>📈 今週: {weekTotal.toLocaleString()} 円 ({weekExpenses.length}件)</p>
+        <p style={{ margin: '5px 0', fontSize: '12px', color: '#666' }}>1日平均: {weekAveragePerDay.toLocaleString()} 円</p>
       </div>
 
       {/* 📅 今月の支出表示 */}
