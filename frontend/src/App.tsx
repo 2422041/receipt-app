@@ -96,6 +96,10 @@ function App() {
   const maxAmount = expenses.length > 0 ? Math.max(...expenses.map(item => item.amount)) : 0
   const minAmount = expenses.length > 0 ? Math.min(...expenses.map(item => item.amount)) : 0
   
+  // 🔴 最高額と最低額の支出項目を取得
+  const maxExpense = expenses.find(item => item.amount === maxAmount)
+  const minExpense = expenses.find(item => item.amount === minAmount)
+  
   // 📅 本日の支出を計算
   const today = new Date().toISOString().split('T')[0]
   const todayExpenses = expenses.filter(item => item.date === today)
@@ -350,6 +354,11 @@ function App() {
         <h2 style={{ margin: 0 }}>合計: {totalAmount.toLocaleString()} 円</h2>
         <p style={{ margin: '5px 0', fontSize: '13px', color: '#666' }}>📊 件数: {expenses.length}件 / 平均: {averageAmount.toLocaleString()} 円</p>
         <p style={{ margin: '5px 0', fontSize: '13px', color: '#666' }}>📈 最高: {maxAmount.toLocaleString()} 円 / 最低: {minAmount.toLocaleString()} 円</p>
+        {expenses.length > 0 && (
+          <p style={{ margin: '5px 0', fontSize: '12px', color: '#999' }}>
+            🔴 {maxExpense?.title} ({maxExpense?.amount.toLocaleString()}円) / 🔵 {minExpense?.title} ({minExpense?.amount.toLocaleString()}円)
+          </p>
+        )}
         
         {/* 📊 カテゴリごとの集計 */}
         {expenses.length > 0 && (
