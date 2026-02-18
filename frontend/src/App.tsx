@@ -137,6 +137,15 @@ function App() {
   const lastMonthExpenses = expenses.filter(item => item.date >= lastMonthStart && item.date <= lastMonthEnd)
   const lastMonthTotal = lastMonthExpenses.reduce((sum, item) => sum + item.amount, 0)
 
+  // 📅 日別の支出を集計してトップ3を取得
+  const dailyAmount = expenses.reduce((acc, item) => {
+    acc[item.date] = (acc[item.date] || 0) + item.amount
+    return acc
+  }, {} as Record<string, number>)
+  const top3Days = Object.entries(dailyAmount)
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, 3)
+
   // 🏆 最多カテゴリ（最も件数が多いカテゴリ）を取得
   const categoryCount = expenses.reduce((acc, item) => {
     acc[item.category] = (acc[item.category] || 0) + 1
@@ -380,7 +389,15 @@ function App() {
         {/* 📊 カテゴリごとの集計 */}
         {expenses.length > 0 && (
           <div style={{ marginTop: '15px', fontSize: '14px' }}>
-            <p style={{ margin: '5px 0', color: '#555' }}>カテゴリ別:</p>
+            <p style={{ margin: '10px 0', color: '#555', fontWeight: 'bold' }}>🏆 支出が多かった日:</p>
+            {top3Days.map(([date, amount], index) => (
+              <div key={date} style={{ marginLeft: '10px', padding: '3px 0', fontSize: '12px' }}>
+                <span>{index + 1}位: {date} - </span>
+                <strong>{(amount as number).toLocaleString()} 円</strong>
+              </div>
+            ))}
+          </div>
+        )}
             {topCategory && (
               <div style={{ marginLeft: '10px', padding: '3px 0', marginBottom: '8px' }}>
                 <span>🏆 最多: </span>
@@ -395,9 +412,7 @@ function App() {
               </div>
             ))}
           </div>
-        )}
       </div>
-    </div>
   )
 }
 
