@@ -130,6 +130,13 @@ function App() {
   const daysRemaining = daysInMonth - daysPassed
   const projectedMonthTotal = monthTotal + (monthAveragePerDay * daysRemaining)
 
+  // 📅 昨月の支出を計算
+  const lastMonth = new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1)
+  const lastMonthStart = lastMonth.toISOString().split('T')[0]
+  const lastMonthEnd = new Date(new Date().getFullYear(), new Date().getMonth(), 0).toISOString().split('T')[0]
+  const lastMonthExpenses = expenses.filter(item => item.date >= lastMonthStart && item.date <= lastMonthEnd)
+  const lastMonthTotal = lastMonthExpenses.reduce((sum, item) => sum + item.amount, 0)
+
   // 🏆 最多カテゴリ（最も件数が多いカテゴリ）を取得
   const categoryCount = expenses.reduce((acc, item) => {
     acc[item.category] = (acc[item.category] || 0) + 1
@@ -185,6 +192,16 @@ function App() {
         <p style={{ margin: '5px 0', fontSize: '12px', color: '#666' }}>1日平均: {monthAveragePerDay.toLocaleString()} 円</p>
         {daysRemaining > 0 && (
           <p style={{ margin: '5px 0', fontSize: '12px', color: '#9c27b0', fontWeight: 'bold' }}>📈 月末予想: {Math.round(projectedMonthTotal).toLocaleString()} 円</p>
+        )}
+      </div>
+
+      {/* 📅 昨月の支出表示 */}
+      <div style={{ backgroundColor: '#fce4ec', padding: '10px 15px', borderRadius: '8px', marginBottom: '15px', borderLeft: '4px solid #e91e63' }}>
+        <p style={{ margin: 0, fontSize: '14px', fontWeight: 'bold' }}>📊 昨月: {lastMonthTotal.toLocaleString()} 円 ({lastMonthExpenses.length}件)</p>
+        {monthTotal > 0 && lastMonthTotal > 0 && (
+          <p style={{ margin: '5px 0', fontSize: '12px', color: '#666' }}>
+            比較: {monthTotal > lastMonthTotal ? '↑' : '↓'} {Math.abs(monthTotal - lastMonthTotal).toLocaleString()} 円
+          </p>
         )}
       </div>
       
