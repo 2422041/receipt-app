@@ -146,6 +146,10 @@ function App() {
     .sort(([, a], [, b]) => b - a)
     .slice(0, 3)
 
+  // 📊 今月の無支出日数を計算
+  const daysWithExpense = Object.keys(dailyAmount).filter(date => date >= monthStart).length
+  const daysWithoutExpense = daysPassed - daysWithExpense
+
   // 🏆 最多カテゴリ（最も件数が多いカテゴリ）を取得
   const categoryCount = expenses.reduce((acc, item) => {
     acc[item.category] = (acc[item.category] || 0) + 1
@@ -199,6 +203,7 @@ function App() {
       <div style={{ backgroundColor: '#f3e5f5', padding: '10px 15px', borderRadius: '8px', marginBottom: '15px', borderLeft: '4px solid #9c27b0' }}>
         <p style={{ margin: 0, fontSize: '14px', fontWeight: 'bold' }}>📊 今月: {monthTotal.toLocaleString()} 円 ({monthExpenses.length}件)</p>
         <p style={{ margin: '5px 0', fontSize: '12px', color: '#666' }}>1日平均: {monthAveragePerDay.toLocaleString()} 円</p>
+        <p style={{ margin: '5px 0', fontSize: '12px', color: '#999' }}>支出日: {daysWithExpense}日 / 無支出日: {daysWithoutExpense}日</p>
         {daysRemaining > 0 && (
           <p style={{ margin: '5px 0', fontSize: '12px', color: '#9c27b0', fontWeight: 'bold' }}>📈 月末予想: {Math.round(projectedMonthTotal).toLocaleString()} 円</p>
         )}
