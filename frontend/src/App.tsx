@@ -146,6 +146,11 @@ function App() {
     .sort(([, a], [, b]) => b - a)
     .slice(0, 3)
 
+  // 📊 支出が最も少なかった日のボトム3を取得
+  const bottom3Days = Object.entries(dailyAmount)
+    .sort(([, a], [, b]) => a - b)
+    .slice(0, 3)
+
   // 📊 今月の無支出日数を計算
   const daysWithExpense = Object.keys(dailyAmount).filter(date => date >= monthStart).length
   const daysWithoutExpense = daysPassed - daysWithExpense
@@ -396,6 +401,13 @@ function App() {
           <div style={{ marginTop: '15px', fontSize: '14px' }}>
             <p style={{ margin: '10px 0', color: '#555', fontWeight: 'bold' }}>🏆 支出が多かった日:</p>
             {top3Days.map(([date, amount], index) => (
+              <div key={date} style={{ marginLeft: '10px', padding: '3px 0', fontSize: '12px' }}>
+                <span>{index + 1}位: {date} - </span>
+                <strong>{(amount as number).toLocaleString()} 円</strong>
+              </div>
+            ))}
+            <p style={{ margin: '10px 0 5px 0', color: '#999', fontWeight: 'bold' }}>🔹 支出が少なかった日:</p>
+            {bottom3Days.map(([date, amount], index) => (
               <div key={date} style={{ marginLeft: '10px', padding: '3px 0', fontSize: '12px' }}>
                 <span>{index + 1}位: {date} - </span>
                 <strong>{(amount as number).toLocaleString()} 円</strong>
