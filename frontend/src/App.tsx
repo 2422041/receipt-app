@@ -151,6 +151,13 @@ function App() {
     .sort(([, a], [, b]) => a - b)
     .slice(0, 3)
 
+  // 🛍️ 本月で最も多く購入された商品を取得
+  const itemCount = monthExpenses.reduce((acc, item) => {
+    acc[item.title] = (acc[item.title] || 0) + 1
+    return acc
+  }, {} as Record<string, number>)
+  const mostFrequentItem = Object.entries(itemCount).sort(([, a], [, b]) => b - a)[0]
+
   // 📊 今月の無支出日数を計算
   const daysWithExpense = Object.keys(dailyAmount).filter(date => date >= monthStart).length
   const daysWithoutExpense = daysPassed - daysWithExpense
@@ -209,6 +216,9 @@ function App() {
         <p style={{ margin: 0, fontSize: '14px', fontWeight: 'bold' }}>📊 今月: {monthTotal.toLocaleString()} 円 ({monthExpenses.length}件)</p>
         <p style={{ margin: '5px 0', fontSize: '12px', color: '#666' }}>1日平均: {monthAveragePerDay.toLocaleString()} 円</p>
         <p style={{ margin: '5px 0', fontSize: '12px', color: '#999' }}>支出日: {daysWithExpense}日 / 無支出日: {daysWithoutExpense}日</p>
+        {mostFrequentItem && (
+          <p style={{ margin: '5px 0', fontSize: '12px', color: '#666' }}>🛍️ よく買う: {mostFrequentItem[0]} ({mostFrequentItem[1]}回)</p>
+        )}
         {daysRemaining > 0 && (
           <p style={{ margin: '5px 0', fontSize: '12px', color: '#9c27b0', fontWeight: 'bold' }}>📈 月末予想: {Math.round(projectedMonthTotal).toLocaleString()} 円</p>
         )}
