@@ -158,6 +158,15 @@ function App() {
   }, {} as Record<string, number>)
   const mostFrequentItem = Object.entries(itemCount).sort(([, a], [, b]) => b - a)[0]
 
+  // 💰 今月の高額商品トップ3を取得
+  const itemTotal = monthExpenses.reduce((acc, item) => {
+    acc[item.title] = (acc[item.title] || 0) + item.amount
+    return acc
+  }, {} as Record<string, number>)
+  const top3Items = Object.entries(itemTotal)
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, 3)
+
   // 📊 今月の無支出日数を計算
   const daysWithExpense = Object.keys(dailyAmount).filter(date => date >= monthStart).length
   const daysWithoutExpense = daysPassed - daysWithExpense
@@ -218,6 +227,11 @@ function App() {
         <p style={{ margin: '5px 0', fontSize: '12px', color: '#999' }}>支出日: {daysWithExpense}日 / 無支出日: {daysWithoutExpense}日</p>
         {mostFrequentItem && (
           <p style={{ margin: '5px 0', fontSize: '12px', color: '#666' }}>🛍️ よく買う: {mostFrequentItem[0]} ({mostFrequentItem[1]}回)</p>
+        )}
+        {top3Items.length > 0 && (
+          <div style={{ margin: '5px 0', fontSize: '11px', color: '#999' }}>
+            💰 高額商品: {top3Items.map(([item], idx) => `${idx + 1}.${item}`).join(' / ')}
+          </div>
         )}
         {daysRemaining > 0 && (
           <p style={{ margin: '5px 0', fontSize: '12px', color: '#9c27b0', fontWeight: 'bold' }}>📈 月末予想: {Math.round(projectedMonthTotal).toLocaleString()} 円</p>
